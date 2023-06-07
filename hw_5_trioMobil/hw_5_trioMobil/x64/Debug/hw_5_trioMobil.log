@@ -1,0 +1,5 @@
+﻿  hw_5_trioMobil.cpp
+C:\Users\BILICI\Desktop\TrioMobil\hw_5_trioMobil\hw_5_trioMobil\hw_5_trioMobil.cpp(17,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\BILICI\Desktop\TrioMobil\hw_5_trioMobil\hw_5_trioMobil\hw_5_trioMobil.cpp(21,47): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\BILICI\Desktop\TrioMobil\hw_5_trioMobil\hw_5_trioMobil\hw_5_trioMobil.cpp(71,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  hw_5_trioMobil.vcxproj -> C:\Users\BILICI\Desktop\TrioMobil\hw_5_trioMobil\x64\Debug\hw_5_trioMobil.exe
