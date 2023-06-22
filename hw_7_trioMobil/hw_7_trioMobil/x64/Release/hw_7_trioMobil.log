@@ -1,0 +1,16 @@
+﻿  hw_7_trioMobil.cpp
+C:\Users\BILICI\Desktop\TrioMobil\hw_7_trioMobil\hw_7_trioMobil\hw_7_trioMobil.cpp(55,58): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+C:\Users\BILICI\Desktop\TrioMobil\hw_7_trioMobil\hw_7_trioMobil\hw_7_trioMobil.cpp(55,27): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+  Generating code
+  Previous IPDB was built with incompatible compiler, fall back to full compilation.
+  All 139 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  hw_7_trioMobil.vcxproj -> C:\Users\BILICI\Desktop\TrioMobil\hw_7_trioMobil\x64\Release\hw_7_trioMobil.exe
