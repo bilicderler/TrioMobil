@@ -1,0 +1,3 @@
+﻿  hw_6_trioMobil.cpp
+C:\Users\BILICI\Desktop\TrioMobil\hw_6_trioMobil\hw_6_trioMobil\hw_6_trioMobil.cpp(11,20): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  hw_6_trioMobil.vcxproj -> C:\Users\BILICI\Desktop\TrioMobil\hw_6_trioMobil\x64\Debug\hw_6_trioMobil.exe
