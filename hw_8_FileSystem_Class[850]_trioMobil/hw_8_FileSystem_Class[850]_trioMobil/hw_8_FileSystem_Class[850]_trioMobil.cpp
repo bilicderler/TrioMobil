@@ -1,107 +1,121 @@
 ﻿#include <iostream>
 #include <string>
-#include <filesystem>
 
 using namespace std;
-namespace fs = std::filesystem;
 
-class TrioPath {
-private:
-    fs::path path_;
+namespace Trio {
+    class TrioPath {
+    public:
+        TrioPath(const string& path) : path_(path) {}
 
-public:
-    TrioPath(const string& path) : path_(path) {}
-
-    TrioPath branch_path() const {
-        return TrioPath(path_.parent_path().string());
-    }
-
-    bool is_empty() const {
-        return path_.empty();
-    }
-
-    TrioPath extension() const {
-        return TrioPath(path_.extension().string());
-    }
-
-    TrioPath filename() const {
-        return TrioPath(path_.filename().string());
-    }
-
-    bool has_extension() const {
-        return !path_.extension().empty();
-    }
-
-    bool has_filename() const {
-        return !path_.filename().empty();
-    }
-
-    TrioPath root_directory() const {
-        return TrioPath(path_.root_path().string());
-    }
-
-    TrioPath stem() const {
-        return TrioPath(path_.stem().string());
-    }
-
-    uintmax_t size() const {
-        try {
-            return fs::file_size(path_);
-        } catch (const fs::filesystem_error& e) {
-            cerr << "Hata: " << e.what() << endl;
-            throw; // Hatanın yeniden fırlatılması
+        TrioPath branch_path() const {
+            size_t found = path_.find_last_of("/\\");
+            if (found != string::npos) {
+                return TrioPath(path_.substr(0, found));
+            }
+            return TrioPath("");
         }
-    }
 
-    void replace_extension(const string& newExtension) {
-        fs::path newPath = path_;
-        newPath.replace_extension(newExtension);
-        path_ = newPath;
-    }
+        bool is_empty() const {
+            return path_.empty();
+        }
 
-    void apply_changes() {
-        fs::rename(path_, path_);
-    }
+        TrioPath extension() const {
+            size_t found = path_.find_last_of(".");
+            if (found != string::npos && found > path_.find_last_of("/\\")) {
+                return TrioPath(path_.substr(found));
+            }
+            return TrioPath("");
+        }
 
-    string string() const {
-        return path_.string();
-    }
-};
+        TrioPath filename() const {
+            size_t found = path_.find_last_of("/\\");
+            if (found != string::npos) {
+                return TrioPath(path_.substr(found + 1));
+            }
+            return TrioPath(path_);
+        }
+
+        bool has_extension() const {
+            size_t found = path_.find_last_of(".");
+            size_t lastSlash = path_.find_last_of("/\\");
+            return (found != string::npos && found > lastSlash);
+        }
+
+        bool has_filename() const {
+            return !path_.empty() && path_.find_last_of("/\\") != string::npos;
+        }
+
+        TrioPath root_directory() const {
+            size_t found = path_.find_first_of("/\\");
+            if (found != string::npos) {
+                return TrioPath(path_.substr(0, found + 1));
+            }
+            return TrioPath("");
+        }
+
+        TrioPath stem() const {
+            size_t lastSlash = path_.find_last_of("/\\");
+            size_t lastDot = path_.find_last_of(".");
+            if (lastDot != string::npos && lastDot > lastSlash) {
+                return TrioPath(path_.substr(lastSlash + 1, lastDot - lastSlash - 1));
+            }
+            return TrioPath(path_);
+        }
+
+        size_t size() const {
+            return path_.size();
+        }
+
+        void replace_extension(const string& filePath, const string& newExtension) {
+            string newFilePath = filePath.substr(0, filePath.find_last_of('.')) + newExtension;
+            // Using rename() function to rename the file
+            if (std::rename(filePath.c_str(), newFilePath.c_str()) == 0) {
+                std::cout << "File extension changed successfully!" << std::endl;
+            }
+            else {
+                std::cout << "Error occurred while changing the file extension!" << std::endl;
+            }
+        }
+
+        string getString() const {
+            return path_;
+        }
+
+    private:
+        string path_;
+    };
+}
 
 int main() {
-    try {
-        cout << "Bir path giriniz: ";
-        string userPath;
-        getline(cin, userPath);
+    cout << "Enter a path: ";
+    string userPath;
+    getline(cin, userPath);
 
-        TrioPath path(userPath);
+    Trio::TrioPath path(userPath);
 
-        cout << "Path boş mu? : " << (path.is_empty() ? "Evet" : "Hayır") << endl;
+    cout << "Is the path empty? : " << (path.is_empty() ? "Yes" : "No") << endl;
 
-        TrioPath branchPath = path.branch_path();
-        cout << "Branch path mevcut mu? : " << (branchPath.has_filename() ? "Evet" : "Hayır") << endl;
-        cout << "Root Path: " << path.root_directory().string() << endl;
-        cout << "Branch Path: " << branchPath.string() << endl;
+    Trio::TrioPath branchPath = path.branch_path();
+    cout << "Does the branch path exist? : " << (branchPath.has_filename() ? "Yes" : "No") << endl;
+    cout << "Root Path: " << path.root_directory().getString() << endl;
+    cout << "Branch Path: " << branchPath.getString() << endl;
 
-        cout << "Filename mevcut mu? : " << (path.has_filename() ? "Evet" : "Hayır") << endl;
-        cout << "Filename: " << path.filename().string() << endl;
+    cout << "Does the filename exist? : " << (path.has_filename() ? "Yes" : "No") << endl;
+    cout << "Filename: " << path.filename().getString() << endl;
 
-        cout << "Extension mevcut mu? : " << (path.has_extension() ? "Evet" : "Hayır") << endl;
-        cout << "Extension: " << path.extension().string() << endl;
+    cout << "Does the extension exist? : " << (path.has_extension() ? "Yes" : "No") << endl;
+    cout << "Extension: " << path.extension().getString() << endl;
 
-        cout << "Uzantısız dosya adı: " << path.stem().string() << endl;
-        cout << "Karakter uzunluğu: " << path.size() << endl;
+    cout << "File name without extension: " << path.stem().getString() << endl;
+    cout << "Character length: " << path.size() << endl;
 
-        cout << "Uzantıyı ne ile değiştirmek isterseniz: ";
-        string newExtension;
-        getline(cin, newExtension);
-        path.replace_extension(newExtension);
-        path.apply_changes();
+    cout << "What extension would you like to replace with (provide with a leading dot): ";
+    string newExtension;
+    getline(cin, newExtension);
+    path.replace_extension(userPath, newExtension);
 
-        cout << "Yeni filename: " << path.filename().string() << endl;
-    } catch (const exception& e) {
-        cerr << "Hata: " << e.what() << endl;
-    }
+    cout << "New filename: " << path.filename().getString() << endl;
 
     return 0;
 }
