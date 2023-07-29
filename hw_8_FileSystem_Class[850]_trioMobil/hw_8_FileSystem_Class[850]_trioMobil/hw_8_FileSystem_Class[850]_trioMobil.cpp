@@ -88,8 +88,13 @@ namespace Trio {
             if (lastDot != string::npos && lastDot > lastSlash) {
                 return TrioPath(path_.substr(lastSlash + 1, lastDot - lastSlash - 1));
             }
+            else if (lastDot != string::npos)
+            {
+                return path_.substr(0,(path_.size()- (path_.size()-lastDot)));
+            }
             return TrioPath(path_);
         }
+
 
         size_t size() const {
             return path_.size();
