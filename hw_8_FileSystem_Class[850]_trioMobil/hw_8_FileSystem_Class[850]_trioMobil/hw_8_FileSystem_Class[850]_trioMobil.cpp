@@ -1,5 +1,6 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -25,6 +26,10 @@ namespace Trio {
             if (found != string::npos && found > path_.find_last_of("/\\")) {
                 return TrioPath(path_.substr(found));
             }
+            else if (found != string::npos)
+            {
+                return TrioPath(path_.substr(found));
+            }
             return TrioPath("");
         }
 
@@ -39,11 +44,34 @@ namespace Trio {
         bool has_extension() const {
             size_t found = path_.find_last_of(".");
             size_t lastSlash = path_.find_last_of("/\\");
-            return (found != string::npos && found > lastSlash);
+            if (found != string::npos && found > lastSlash)
+            {
+                return true;
+            }
+            else if (found!=NULL)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         bool has_filename() const {
-            return !path_.empty() && path_.find_last_of("/\\") != string::npos;
+            size_t lastSlash = path_.find_last_of("/\\");
+            if (!path_.empty() && lastSlash != string::npos && lastSlash < path_.size() - 1)
+            {
+                return true;
+            }
+            else if (!path_.empty())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         TrioPath root_directory() const {
@@ -72,10 +100,20 @@ namespace Trio {
             // Using rename() function to rename the file
             if (std::rename(filePath.c_str(), newFilePath.c_str()) == 0) {
                 std::cout << "File extension changed successfully!" << std::endl;
+                path_ = newFilePath; // Update the path_ member variable
             }
             else {
                 std::cout << "Error occurred while changing the file extension!" << std::endl;
             }
+        }
+
+        bool file_exists() const {
+            ifstream file(path_);
+            return file.good() && file.is_open();
+        }
+
+        string get_status() const {
+            return file_exists() ? "File exists!" : "File not found!";
         }
 
         string getString() const {
@@ -94,6 +132,10 @@ int main() {
 
     Trio::TrioPath path(userPath);
 
+    if (!path.file_exists()) {
+        cout << "Error: The specified file does not exist!" << endl;
+        return 1;
+    }
     cout << "Is the path empty? : " << (path.is_empty() ? "Yes" : "No") << endl;
 
     Trio::TrioPath branchPath = path.branch_path();
