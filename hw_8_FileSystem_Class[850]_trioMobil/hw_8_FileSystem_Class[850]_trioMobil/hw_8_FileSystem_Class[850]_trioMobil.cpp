@@ -48,14 +48,15 @@ namespace Trio {
             {
                 return true;
             }
-            else if (found!=NULL)
+            else if (found && !lastSlash)
             {
                 return true;
             }
-            else
+            else if (!found && !lastSlash)
             {
                 return false;
             }
+
         }
 
         bool has_filename() const {
@@ -165,4 +166,3 @@ int main() {
     cout << "New filename: " << path.filename().getString() << endl;
 
     return 0;
-}
