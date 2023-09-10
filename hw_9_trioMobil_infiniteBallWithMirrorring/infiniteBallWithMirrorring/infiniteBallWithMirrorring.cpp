@@ -1,4 +1,4 @@
-﻿#include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <cstdlib>
 #include <ctime>
 
@@ -32,9 +32,16 @@ int main() {
             dx = -dx; // Reverse the x direction on collision
             dy = rand() % 5 - 2; // Random y direction after collision
         }
-        if (center.y + radius > image.rows || center.y - radius < 0) {
+        else if (center.y + radius > image.rows || center.y - radius < 0) {
             dy = -dy; // Reverse the y direction on collision
             dx = rand() % 5 - 2; // Random x direction after collision
+        }
+        else if (center.x + radius > image.cols || center.x - radius < 0|| center.y + radius > image.rows || center.y - radius < 0)
+        {
+            dx = -dx;
+            dy = -dy;
+            dx = rand() % 5 - 2;
+            dy = rand() % 5 - 2;
         }
 
         // Draw the ball
@@ -44,7 +51,7 @@ int main() {
         imshow("Mirroring Ball", image);
 
         // Wait for a short duration
-        waitKey(3);
+        waitKey(1);
     }
 
     destroyWindow("Mirroring Ball");
